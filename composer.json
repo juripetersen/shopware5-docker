@@ -1,0 +1,21 @@
+{
+  "name": "visuel/shopware-docker",
+  "description": "shopware docker setup",
+  "keywords": ["shopware", "shop"],
+  "homepage": "http://www.shopware.com",
+  "type": "project",
+  "license": [
+    "AGPL-3.0",
+    "proprietary"
+  ],
+  "support": {
+    "forum": "https://forum.shopware.com",
+    "chat": "https://gitter.im/shopware/shopware",
+    "wiki": "https://docs.shopware.com/",
+    "source": "https://github.com/shopware/shopware",
+    "issues": "https://issues.shopware.com"
+  },
+  "require": {
+    "shopware/shopware": "^5.5"
+  }
+}
