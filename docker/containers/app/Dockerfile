@@ -7,13 +7,13 @@ RUN mkdir -p /usr/share/man/man1
 
 RUN apt-get update && apt-get install -y ant nodejs
 
-#COPY php-config.ini /opt/docker/etc/php/php.ini
+COPY /docker/containers/app/php-config.ini /opt/docker/etc/php/php.ini
 
 #COPY wait-for-it.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 ENV COMPOSER_CACHE_DIR=/.composer/cache
-ENV WEB_DOCUMENT_ROOT=/app
+ENV WEB_DOCUMENT_ROOT=/app/vendor/shopware/shopware
 
 # Install Composer
 RUN cd ~
@@ -23,7 +23,24 @@ RUN mv composer.phar /usr/local/bin/composer
 
 COPY . /app
 
-WORKDIR /app
+WORKDIR /app/vendor/shopware/shopware
+
+RUN mv config.php.dist config.php
+
+# Shopware needs permanent write permissions
+RUN chmod 777 ./config.php
+RUN chmod 777 -R ./web/cache
+RUN chmod 777 -R ./files
+RUN chmod 777 -R ./media
+RUN chmod 777 -R ./engine/Shopware/Plugins/Community
+RUN chmod 777 -R ./engine/Shopware/Plugins/Default
+RUN chmod 777 -R ./web/cache/
+RUN chmod 777 -R ./recovery/
+RUN chmod 777 -R ./recovery/install/data
+RUN chmod 777 -R ./themes/Frontend
+RUN chmod 777 -R ./recovery/install/data
+RUN chmod 777 -R ./var/
+RUN chmod 777 -R ./custom/plugins
 
 # Installing dependencies
-RUN composer install
+# RUN composer install
