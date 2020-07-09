@@ -1,10 +1,53 @@
 version: '3.3'
 
 services:
+  database:
+    container_name: sh5init_database
+    image: mysql:5.7
+    working_dir: /var/www/html
+    volumes:
+      - database:/var/lib/mysql:cached
+    #networks:
+    #  - stack
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=shopware
+      - MYSQL_USER=shopware
+      - MYSQL_PASSWORD=shopware
+      - MYSQL_HOST=mysql
+
   app:
+    container_name: sh5init_application
     build:
       context: .
       dockerfile: ./docker/containers/app/Dockerfile
+      args:
+        USER_ID: $USER_ID
+        GROUP_ID: $GROUP_ID
+    depends_on:
+      - database
     volumes:
       - .:/app
       - ./custom:/app/vendor/shopware/shopware/custom
+    ports:
+      - 8080:80
+
+  tooling:
+    container_name: sh5init_tooling
+    build:
+      context: .
+      dockerfile: ./docker/containers/tooling/Dockerfile
+      args:
+        USER_ID: $USER_ID
+        GROUP_ID: $GROUP_ID
+    #networks:
+    #  - stack
+    tty: true
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    restart: always
+
+volumes:
+  database:
